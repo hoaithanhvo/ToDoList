@@ -1,22 +1,63 @@
 const input = document.getElementById("input-task")
 const button = document.getElementById("add-button")
 const list = document.getElementById("task-list")
-const tasks = []
+const deleteAll = document.getElementById("deletAll")
+const last = document.getElementById("last")
 
+const tasks = []
+var tasks1 = []
+// localStorage.setItem('tasks', JSON.stringify(tasks));
+let string = localStorage.getItem("tasks")
+var myArray = JSON.parse(string)
+last.innerHTML = "";
+tasks1 = [...myArray]
+console.log("d", tasks1);
+tasks1.forEach((item, index) => {
+
+    const taomoi1 = document.createElement("h1")
+    taomoi1.innerHTML = `<h1>${item}</h1>
+            <button class="delete-button" data-index=${index}>xóa</button>
+            <button class="edit-button" data-index=${index}>edit</button>
+        `
+    last.appendChild(taomoi1)
+})
 
 function render() {
     list.innerHTML = "";
+
+
     tasks.forEach((item, index) => {
         if (item != null) {
-            const li = document.createElement("h1")
-            li.innerHTML = `<span>${item}</span> 
-            <h1>${index}</h1>
+            const taomoi = document.createElement("h1")
+            taomoi.innerHTML = `<h1>${item}</h1>
+        <button class="delete-button" data-index=${index}>xóa</button>
         <button class="edit-button" data-index=${index}>edit</button>
-        <button  class="delete-button" data-index=${index}>Delete</button>`
-            list.appendChild(li)
+    `
+            list.appendChild(taomoi)
+            // let string = localStorage.getItem("tasks")
+            // var myArray = JSON.parse(string)
+            // tasks1 = [...myArray]
+
+            // tasks1.splice(0, tasks1.length);
+
+            // console.log("myArray2", tasks1);
+
+            // tasks1.map((item) => {
+            //     console.log(item);
+
+            // })
         }
     })
 }
+// console.log("myArray12", tasks1);
+
+
+
+
+
+
+
+
 
 function addTask() {
     const task = input.value
@@ -24,6 +65,8 @@ function addTask() {
         tasks.push(task)
         input.value = ""
         render()
+        localStorage.setItem('tasks', JSON.stringify(tasks));
+
     }
 }
 function edit(index) {
@@ -38,10 +81,22 @@ function deleteTask(index) {
     render();
 }
 
+function XoaTatCa() {
+    tasks.splice(0, tasks.length);
+    deleteAll.style.color = "red"
+
+
+    render()
+}
+
+deleteAll.addEventListener("click", XoaTatCa)
+
+
 button.addEventListener("click", addTask)
 
 list.addEventListener("click", event => {
     const target = event.target;
+    console.log("target11", target);
     if (target.classList.contains("edit-button")) {
         const index = parseInt(target.dataset.index);
         console.log("index", index);
@@ -52,4 +107,6 @@ list.addEventListener("click", event => {
         deleteTask(index);
     }
 })
+
+// console.log("local", localStorage.getItem(0));
 render();
